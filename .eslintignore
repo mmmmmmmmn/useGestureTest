@@ -1,0 +1,8 @@
+node_modules
+.next
+.env
+out
+dist
+
+!.eslintrc.js
+!.huskyrc.js

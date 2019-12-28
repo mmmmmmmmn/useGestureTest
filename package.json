@@ -1,0 +1,53 @@
+{
+    "name": "lint",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "start": "next start",
+        "export": "next export",
+        "lintAll": "eslint . --fix --ext .js,.ts,.tsx",
+        "fmt": "prettier --loglevel warn --write \"**/*.{js,ts,tsx,md,json,css}\"",
+        "type-check": "tsc -w -noEmit",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/cli": "7.7.7",
+        "@babel/core": "7.7.7",
+        "@babel/node": "7.7.7",
+        "@babel/preset-react": "7.7.4",
+        "@babel/preset-typescript": "7.7.7",
+        "@types/material-ui": "^0.21.7",
+        "@types/node": "12.12.22",
+        "@types/react": "16.9.17",
+        "@types/react-dom": "16.9.4",
+        "@types/styled-components": "^4.4.1",
+        "@typescript-eslint/eslint-plugin": "^2.13.0",
+        "@typescript-eslint/parser": "^2.13.0",
+        "babel-loader": "8.0.6",
+        "babel-plugin-macros": "2.8.0",
+        "babel-plugin-styled-components": "^1.10.6",
+        "eslint": "6.8.0",
+        "eslint-config-prettier": "6.7.0",
+        "eslint-plugin-prettier": "3.1.2",
+        "eslint-plugin-react": "7.17.0",
+        "eslint-plugin-react-hooks": "2.3.0",
+        "husky": "3.1.0",
+        "lint-staged": "9.5.0",
+        "prettier": "1.19.1",
+        "typescript": "3.7.4"
+    },
+    "dependencies": {
+        "next": "^9.1.6",
+        "react": "16.12.0",
+        "react-dom": "16.12.0",
+        "react-spring": "^9.0.0-beta.34",
+        "react-use-gesture": "^7.0.4",
+        "styled-components": "^4.4.1"
+    }
+}
