@@ -74,5 +74,6 @@ const Target = styled(animated.div)`
 
     & + & {
         margin-top: 10px;
+        background: blue;
     }
 `
