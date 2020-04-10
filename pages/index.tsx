@@ -71,6 +71,7 @@ const Target = styled(animated.div)`
     background: red;
     border: 1px solid;
     cursor: pointer;
+    user-select: none;
 
     & + & {
         margin-top: 10px;
