@@ -97,15 +97,7 @@ const initialSpringValues = {
     immediate: false,
 }
 
-const getDistance = (y: number): number => {
-    const absDistance = (positiveY => {
-        if (0 <= positiveY && positiveY < height * 0.5) return 0
-
-        return Math.floor((positiveY - height * 0.5) / (height + between))
-    })(Math.abs(y))
-
-    return Math.sign(y) * absDistance
-}
+const getDistance = (y: number) => Math.sign(y) * Math.floor((Math.abs(y) + height * 0.5) / (height + between))
 
 const clamp = (target: number, min: number, max: number) => Math.min(Math.max(target, min), max)
 
