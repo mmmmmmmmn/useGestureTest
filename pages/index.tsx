@@ -34,7 +34,7 @@ const Index: NextComponentType = () => {
                 set(rawIndex => {
                     if (goal === rawIndex)
                         return {
-                            y: my - (height + between) * (goal - originalIndex),
+                            y: my - (height + between) * (goal - originalIndex - dir),
                             z: 5,
                             scale: 1.5,
                             immediate: true,
