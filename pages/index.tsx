@@ -31,8 +31,8 @@ const Index: NextComponentType = () => {
                         })
                         .map(sortedIndex => data[sortedIndex]),
                 )
-                set(index => {
-                    if (goal === index)
+                set(rawIndex => {
+                    if (goal === rawIndex)
                         return {
                             y: my - (height + between) * (goal - originalIndex),
                             z: 10,
@@ -48,8 +48,8 @@ const Index: NextComponentType = () => {
             return
         }
 
-        set(index => {
-            if (originalIndex === index)
+        set(rawIndex => {
+            if (originalIndex === rawIndex)
                 return {
                     y: my,
                     z: 10,
@@ -58,7 +58,7 @@ const Index: NextComponentType = () => {
                 }
 
             return {
-                y: min <= index && index <= max ? -1 * dir * (height + between) : 0,
+                y: min <= rawIndex && rawIndex <= max ? -1 * dir * (height + between) : 0,
                 z: 0,
                 immediate: key => ['z'].includes(key),
             }
