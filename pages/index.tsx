@@ -12,56 +12,43 @@ const between = 10
 
 const Index: NextComponentType = () => {
     const order = React.useRef<number[]>(data.map((_, index) => index))
-    const [springs, set] = useSprings(data.length, () => initialSpringValues)
+    const [springs, setSprings] = useSprings(data.length, () => initialSpringValues)
 
-    const calcBaseY = (rawIndex: number, adjust = 0): number => {
-        const diff = order.current.indexOf(rawIndex) - rawIndex
-        return (height + between) * (diff + adjust)
-    }
+    const getApparentIndex = getGetApparentIndex(order)
+    const getDiff = (rawIndex: number): number => getApparentIndex(rawIndex) - rawIndex
 
-    const bind = useDrag(({ args: [originalIndex], movement: [, my], down }) => {
-        const apparentIndex = order.current.indexOf(originalIndex)
-        const apparentGoal = clamp(apparentIndex + getDistance(my), 0, data.length - 1)
+    const bind = useDrag(({ args: [rawStart], movement: [, my], down }) => {
+        const apparentStart = getApparentIndex(rawStart)
+        const apparentGoal = clamp(apparentStart + getApparentDistance(my), 0, data.length - 1)
 
-        const minIndex = Math.min(apparentIndex, apparentGoal)
-        const maxIndex = Math.max(apparentIndex, apparentGoal)
-        const dir = Math.sign(my)
+        if (down) {
+            setSprings(rawIndex => {
+                const apparentIndex = getApparentIndex(rawIndex)
 
-        if (!down) {
-            order.current = order.current
-                .map((_, rawIndex) => {
-                    if (rawIndex === apparentGoal) return apparentIndex
-                    if (minIndex <= rawIndex && rawIndex <= maxIndex) return rawIndex + dir
-
-                    return rawIndex
-                })
-                .map(sortedIndex => order.current[sortedIndex])
-
-            set(rawIndex => ({
-                ...initialSpringValues,
-                y: calcBaseY(rawIndex),
-            }))
-        } else {
-            set(rawIndex => {
-                if (originalIndex === rawIndex)
+                if (apparentIndex === apparentStart) {
                     return {
-                        y: calcBaseY(originalIndex) + my,
+                        y: calcBaseY(getDiff(rawStart)) + my,
                         z: 10,
                         scale: 1.5,
                         immediate: key => ['y', 'z'].includes(key),
                     }
-
-                return {
-                    y: calcBaseY(
-                        rawIndex,
-                        minIndex <= order.current.indexOf(rawIndex) && order.current.indexOf(rawIndex) <= maxIndex
-                            ? -1 * dir
-                            : 0,
-                    ),
-                    z: 0,
-                    immediate: key => ['z'].includes(key),
+                } else {
+                    return {
+                        y: calcBaseY(getDiff(rawIndex) + getAdjust(apparentIndex, apparentStart, apparentGoal)),
+                        z: 0,
+                        immediate: key => ['z'].includes(key),
+                    }
                 }
             })
+        } else {
+            order.current = sort(order.current.length, apparentStart, apparentGoal).map(
+                sortDestination => order.current[sortDestination],
+            )
+
+            setSprings(rawIndex => ({
+                ...initialSpringValues,
+                y: calcBaseY(getDiff(rawIndex)),
+            }))
         }
     })
 
@@ -94,9 +81,32 @@ const initialSpringValues = {
     immediate: false,
 }
 
-const getDistance = (y: number) => Math.sign(y) * Math.floor((Math.abs(y) + height * 0.5) / (height + between))
+const getGetApparentIndex = (order: React.MutableRefObject<number[]>) => (rawIndex: number): number =>
+    order.current.indexOf(rawIndex)
 
-const clamp = (target: number, min: number, max: number) => Math.min(Math.max(target, min), max)
+const getApparentDistance = (y: number): number =>
+    Math.sign(y) * Math.floor((Math.abs(y) + height * 0.5) / (height + between))
+
+const getAdjust = (target: number, excludeBorder: number, containBorder: number): number => {
+    const isBetween: boolean = ((target, excludeBorder, containBorder) => {
+        if (excludeBorder < containBorder) return excludeBorder < target && target <= containBorder
+        if (containBorder < excludeBorder) return containBorder <= target && target < excludeBorder
+
+        return false
+    })(target, excludeBorder, containBorder)
+
+    return isBetween ? Math.sign(excludeBorder - containBorder) : 0
+}
+
+const sort = (length: number, start: number, goal: number): number[] =>
+    [...Array(length).keys()].map((_, apparentIndex) => {
+        if (apparentIndex === goal) return start
+        else return apparentIndex + getAdjust(apparentIndex, goal, start)
+    })
+
+const calcBaseY = (n: number): number => (height + between) * n
+
+const clamp = (target: number, min: number, max: number): number => Math.min(Math.max(target, min), max)
 
 const Target = styled(animated.div)<{ bg: string }>`
     display: flex;
