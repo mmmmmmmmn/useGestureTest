@@ -4,3 +4,4 @@ out
 .env
 dist
 package-lock.json
+.now
