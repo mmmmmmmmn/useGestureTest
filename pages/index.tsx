@@ -6,8 +6,11 @@ import styled from 'styled-components'
 import { useSprings, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 
+const data = ['red', 'blue', 'green', 'purple', 'yellow']
+const height = 100
+const between = 10
+
 const Index: NextComponentType = () => {
-    const data = ['red', 'blue', 'green', 'purple', 'yellow']
     const order = React.useRef<number[]>(data.map((_, index) => index))
     const [springs, set] = useSprings(data.length, () => initialSpringValues)
 
@@ -83,9 +86,6 @@ const Index: NextComponentType = () => {
 }
 
 export default Index
-
-const height = 100
-const between = 10
 
 const initialSpringValues = {
     y: 0,
