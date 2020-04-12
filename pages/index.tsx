@@ -7,62 +7,59 @@ import { useSprings, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 
 const Index: NextComponentType = () => {
-    const [data, setData] = React.useState(['red', 'blue', 'green', 'purple', 'yellow'])
-
+    const data = ['red', 'blue', 'green', 'purple', 'yellow']
+    const order = React.useRef<number[]>(data.map((_, index) => index))
     const [springs, set] = useSprings(data.length, () => initialSpringValues)
 
-    const bind = useDrag(({ args: [originalIndex], movement: [, my], down }) => {
-        const goal = clamp(originalIndex + getDistance(my), 0, data.length - 1)
+    const calcBaseY = (rawIndex: number, adjust = 0): number => {
+        const diff = order.current.indexOf(rawIndex) - rawIndex
+        return (height + between) * (diff + adjust)
+    }
 
-        const min = Math.min(originalIndex, goal)
-        const max = Math.max(originalIndex, goal)
+    const bind = useDrag(({ args: [originalIndex], movement: [, my], down }) => {
+        const apparentIndex = order.current.indexOf(originalIndex)
+        const apparentGoal = clamp(apparentIndex + getDistance(my), 0, data.length - 1)
+
+        const minIndex = Math.min(apparentIndex, apparentGoal)
+        const maxIndex = Math.max(apparentIndex, apparentGoal)
         const dir = Math.sign(my)
 
         if (!down) {
-            if (originalIndex !== goal) {
-                // 並べ替え
-                setData(data =>
-                    [...Array(data.length).keys()]
-                        .map(rawIndex => {
-                            if (rawIndex === goal) return originalIndex
-                            if (min <= rawIndex && rawIndex <= max) return rawIndex + dir
+            order.current = order.current
+                .map((_, rawIndex) => {
+                    if (rawIndex === apparentGoal) return apparentIndex
+                    if (minIndex <= rawIndex && rawIndex <= maxIndex) return rawIndex + dir
 
-                            return rawIndex
-                        })
-                        .map(sortedIndex => data[sortedIndex]),
-                )
-                set(rawIndex => {
-                    if (goal === rawIndex)
-                        return {
-                            y: my - (height + between) * (goal - originalIndex),
-                            z: 5,
-                            scale: 1.5,
-                            immediate: true,
-                        }
-
-                    return { ...initialSpringValues, immediate: true }
+                    return rawIndex
                 })
-            }
+                .map(sortedIndex => order.current[sortedIndex])
 
-            set(initialSpringValues)
-            return
-        }
+            set(rawIndex => ({
+                ...initialSpringValues,
+                y: calcBaseY(rawIndex),
+            }))
+        } else {
+            set(rawIndex => {
+                if (originalIndex === rawIndex)
+                    return {
+                        y: calcBaseY(originalIndex) + my,
+                        z: 10,
+                        scale: 1.5,
+                        immediate: key => ['y', 'z'].includes(key),
+                    }
 
-        set(rawIndex => {
-            if (originalIndex === rawIndex)
                 return {
-                    y: my,
-                    z: 10,
-                    scale: 1.5,
-                    immediate: key => ['y', 'z'].includes(key),
+                    y: calcBaseY(
+                        rawIndex,
+                        minIndex <= order.current.indexOf(rawIndex) && order.current.indexOf(rawIndex) <= maxIndex
+                            ? -1 * dir
+                            : 0,
+                    ),
+                    z: 0,
+                    immediate: key => ['z'].includes(key),
                 }
-
-            return {
-                y: min <= rawIndex && rawIndex <= max ? -1 * dir * (height + between) : 0,
-                z: 0,
-                immediate: key => ['z'].includes(key),
-            }
-        })
+            })
+        }
     })
 
     return (
@@ -78,7 +75,7 @@ const Index: NextComponentType = () => {
                     }}
                     bg={data[i]}
                 >
-                    {data[i]}
+                    {`${i}: ${data[i]}`}
                 </Target>
             ))}
         </>
