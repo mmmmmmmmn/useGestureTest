@@ -11,7 +11,7 @@
         "lintAll": "eslint . --fix --ext .js,.ts,.tsx",
         "fmt": "prettier --loglevel warn --write \"**/*.{js,ts,tsx,md,json,css}\"",
         "type-check": "tsc -w -noEmit",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest"
     },
     "keywords": [],
     "author": "",
@@ -22,6 +22,7 @@
         "@babel/node": "7.7.7",
         "@babel/preset-react": "7.7.4",
         "@babel/preset-typescript": "7.7.7",
+        "@types/jest": "^25.2.1",
         "@types/material-ui": "^0.21.7",
         "@types/node": "12.12.22",
         "@types/react": "16.9.17",
@@ -38,6 +39,7 @@
         "eslint-plugin-react": "7.17.0",
         "eslint-plugin-react-hooks": "2.3.0",
         "husky": "3.1.0",
+        "jest": "^25.3.0",
         "lint-staged": "9.5.0",
         "prettier": "1.19.1",
         "typescript": "3.7.4"

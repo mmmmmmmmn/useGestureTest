@@ -6,6 +6,8 @@ import styled from 'styled-components'
 import { useSprings, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 
+import { getAdjust, move, clamp } from '../config/func'
+
 const data = ['red', 'blue', 'green', 'purple', 'yellow']
 const height = 100
 const between = 10
@@ -41,7 +43,7 @@ const Index: NextComponentType = () => {
                 }
             })
         } else {
-            order.current = sort(order.current.length, apparentStart, apparentGoal).map(
+            order.current = move(order.current.length, apparentStart, apparentGoal).map(
                 sortDestination => order.current[sortDestination],
             )
 
@@ -87,26 +89,7 @@ const getGetApparentIndex = (order: React.MutableRefObject<number[]>) => (rawInd
 const getApparentDistance = (y: number): number =>
     Math.sign(y) * Math.floor((Math.abs(y) + height * 0.5) / (height + between))
 
-const getAdjust = (target: number, excludeBorder: number, containBorder: number): number => {
-    const isBetween: boolean = ((target, excludeBorder, containBorder) => {
-        if (excludeBorder < containBorder) return excludeBorder < target && target <= containBorder
-        if (containBorder < excludeBorder) return containBorder <= target && target < excludeBorder
-
-        return false
-    })(target, excludeBorder, containBorder)
-
-    return isBetween ? Math.sign(excludeBorder - containBorder) : 0
-}
-
-const sort = (length: number, start: number, goal: number): number[] =>
-    [...Array(length).keys()].map((_, apparentIndex) => {
-        if (apparentIndex === goal) return start
-        else return apparentIndex + getAdjust(apparentIndex, goal, start)
-    })
-
 const calcBaseY = (n: number): number => (height + between) * n
-
-const clamp = (target: number, min: number, max: number): number => Math.min(Math.max(target, min), max)
 
 const Target = styled(animated.div)<{ bg: string }>`
     display: flex;
