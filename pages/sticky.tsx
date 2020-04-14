@@ -9,7 +9,7 @@ import { useDrag } from 'react-use-gesture'
 const size = 100
 const [min, max] = [0, size * 2]
 
-const SimpleSpring: NextComponentType = () => {
+const Sticky: NextComponentType = () => {
     const [isTop, setIsTop] = React.useState(true)
     const clamped = isTop ? min : max
     const base = { y: clamped }
@@ -30,7 +30,7 @@ const SimpleSpring: NextComponentType = () => {
     return <Target {...bind()} style={props} />
 }
 
-export default SimpleSpring
+export default Sticky
 
 const Target = styled(animated.div)`
     border: 1px solid;
