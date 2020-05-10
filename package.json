@@ -11,7 +11,7 @@
         "lintAll": "eslint . --fix --ext .js,.ts,.tsx",
         "fmt": "prettier --loglevel warn --write \"**/*.{js,ts,tsx,md,json,css}\"",
         "type-check": "tsc -w -noEmit",
-        "test": "ts-node -P tsconfig.tape.json $(npx tape) */**.test.ts"
+        "test": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' tape -r ts-node/register **/*.test.ts"
     },
     "keywords": [],
     "author": "",
