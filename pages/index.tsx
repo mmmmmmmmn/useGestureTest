@@ -6,50 +6,44 @@ import styled from 'styled-components'
 import { useSprings, animated } from 'react-spring'
 import { useDrag } from 'react-use-gesture'
 
-import { getAdjust, move, clamp } from '../config/func'
+import { getAdjust, move as _move, clamp as _clamp } from '../config/func'
 
 const data = ['red', 'blue', 'green', 'purple', 'yellow']
 const height = 100
 const between = 10
 
 const Index: NextComponentType = () => {
-    const order = React.useRef<number[]>(data.map((_, index) => index))
-    const [springs, setSprings] = useSprings(data.length, () => initialSpringValues)
-
-    const getApparentIndex = getGetApparentIndex(order)
-    const getDiff = (rawIndex: number): number => getApparentIndex(rawIndex) - rawIndex
+    const { order, springs, setSprings, ...utils } = useOrder(data.length)
 
     const bind = useDrag(({ args: [rawStart], movement: [, my], down }) => {
-        const apparentStart = getApparentIndex(rawStart)
-        const apparentGoal = clamp(apparentStart + getApparentDistance(my), 0, data.length - 1)
+        const apparentStart = utils.getApparentIndex(rawStart)
+        const apparentGoal = utils.clamp(apparentStart + getApparentDistance(my))
 
         if (down) {
             setSprings(rawIndex => {
-                const apparentIndex = getApparentIndex(rawIndex)
+                const apparentIndex = utils.getApparentIndex(rawIndex)
 
                 if (apparentIndex === apparentStart) {
                     return {
-                        y: calcBaseY(getDiff(rawStart)) + my,
+                        y: calcBaseY(utils.getDiff(rawStart)) + my,
                         z: 10,
                         scale: 1.5,
                         immediate: key => ['y', 'z'].includes(key),
                     }
                 } else {
                     return {
-                        y: calcBaseY(getDiff(rawIndex) + getAdjust(apparentIndex, apparentStart, apparentGoal)),
+                        y: calcBaseY(utils.getDiff(rawIndex) + getAdjust(apparentIndex, apparentStart, apparentGoal)),
                         z: 0,
                         immediate: key => ['z'].includes(key),
                     }
                 }
             })
         } else {
-            order.current = move(apparentStart, apparentGoal, order.current.length).map(
-                sortDestination => order.current[sortDestination],
-            )
+            order.current = utils.move(apparentStart, apparentGoal)
 
             setSprings(rawIndex => ({
                 ...initialSpringValues,
-                y: calcBaseY(getDiff(rawIndex)),
+                y: calcBaseY(utils.getDiff(rawIndex)),
             }))
         }
     })
@@ -76,15 +70,42 @@ const Index: NextComponentType = () => {
 
 export default Index
 
+const useOrder = (length: number) => {
+    const order = React.useRef<number[]>([...Array(length).keys()])
+    const [springs, setSprings] = useSprings(length, () => initialSpringValues)
+
+    return {
+        order,
+        springs,
+        setSprings,
+        ...useOrderUtils(order),
+    }
+}
+
+const useOrderUtils = (order: React.MutableRefObject<number[]>) => {
+    const { length } = order.current
+
+    const move = (start: number, goal: number): number[] =>
+        _move(start, goal, length).map(sortDestination => order.current[sortDestination])
+    const clamp = (target: number): number => _clamp(target, 0, length - 1)
+
+    const getApparentIndex = (rawIndex: number): number => order.current.indexOf(rawIndex)
+    const getDiff = (rawIndex: number): number => getApparentIndex(rawIndex) - rawIndex
+
+    return {
+        move,
+        clamp,
+        getApparentIndex,
+        getDiff,
+    }
+}
+
 const initialSpringValues = {
     y: 0,
     z: 1,
     scale: 1,
     immediate: false,
 }
-
-const getGetApparentIndex = (order: React.MutableRefObject<number[]>) => (rawIndex: number): number =>
-    order.current.indexOf(rawIndex)
 
 const getApparentDistance = (y: number): number =>
     Math.sign(y) * Math.floor((Math.abs(y) + height * 0.5) / (height + between))
