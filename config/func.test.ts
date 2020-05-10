@@ -1,79 +1,104 @@
+import test from 'tape'
 import { getAdjust, move, clamp } from './func'
 
-describe('getAdjust', () => {
-    test('min excludeBorder case', () => {
-        expect(getAdjust(2, 3, 5)).toBe(0)
-        expect(getAdjust(3, 3, 5)).toBe(0)
-        expect(getAdjust(4, 3, 5)).toBe(-1)
-        expect(getAdjust(5, 3, 5)).toBe(-1)
-        expect(getAdjust(6, 3, 5)).toBe(0)
+test('getAdjust', t => {
+    t.test('min excludeBorder case', st => {
+        st.equal(getAdjust(2, 3, 5), 0)
+        st.equal(getAdjust(3, 3, 5), 0)
+        st.equal(getAdjust(4, 3, 5), -1)
+        st.equal(getAdjust(5, 3, 5), -1)
+        st.equal(getAdjust(6, 3, 5), 0)
+
+        st.end()
     })
 
-    test('max excludeBorder case', () => {
-        expect(getAdjust(2, 5, 3)).toBe(0)
-        expect(getAdjust(3, 5, 3)).toBe(1)
-        expect(getAdjust(4, 5, 3)).toBe(1)
-        expect(getAdjust(5, 5, 3)).toBe(0)
-        expect(getAdjust(6, 5, 3)).toBe(0)
+    t.test('max excludeBorder case', st => {
+        st.equal(getAdjust(2, 5, 3), 0)
+        st.equal(getAdjust(3, 5, 3), 1)
+        st.equal(getAdjust(4, 5, 3), 1)
+        st.equal(getAdjust(5, 5, 3), 0)
+        st.equal(getAdjust(6, 5, 3), 0)
+
+        st.end()
     })
 
-    test('equal border case', () => {
-        expect(getAdjust(2, 3, 3)).toBe(0)
-        expect(getAdjust(3, 3, 3)).toBe(0)
-        expect(getAdjust(4, 3, 3)).toBe(0)
-    })
-})
+    t.test('equal border case', st => {
+        st.equal(getAdjust(2, 3, 3), 0)
+        st.equal(getAdjust(3, 3, 3), 0)
+        st.equal(getAdjust(4, 3, 3), 0)
 
-describe('clamp', () => {
-    test('left out case', () => {
-        expect(clamp(1, 3, 5)).toBe(3)
-    })
-
-    test('left edge case', () => {
-        expect(clamp(3, 3, 5)).toBe(3)
-    })
-
-    test('center case', () => {
-        expect(clamp(4, 3, 5)).toBe(4)
-    })
-
-    test('right edge case', () => {
-        expect(clamp(5, 3, 5)).toBe(5)
-    })
-
-    test('right out case', () => {
-        expect(clamp(7, 3, 5)).toBe(5)
+        st.end()
     })
 })
 
-describe('move', () => {
-    test('normal case from top', () => {
-        expect(move(5, 0, 0)).toEqual([0, 1, 2, 3, 4])
-        expect(move(5, 0, 1)).toEqual([1, 0, 2, 3, 4])
-        expect(move(5, 0, 2)).toEqual([1, 2, 0, 3, 4])
-        expect(move(5, 0, 3)).toEqual([1, 2, 3, 0, 4])
-        expect(move(5, 0, 4)).toEqual([1, 2, 3, 4, 0])
+test('clamp', t => {
+    t.test('left out case', st => {
+        st.equal(clamp(1, 3, 5), 3)
+
+        st.end()
     })
 
-    test('normal case from no top', () => {
-        expect(move(5, 1, 1)).toEqual([0, 1, 2, 3, 4])
-        expect(move(5, 1, 2)).toEqual([0, 2, 1, 3, 4])
-        expect(move(5, 1, 3)).toEqual([0, 2, 3, 1, 4])
-        expect(move(5, 1, 4)).toEqual([0, 2, 3, 4, 1])
+    t.test('left edge case', st => {
+        st.equal(clamp(3, 3, 5), 3)
+
+        st.end()
     })
 
-    test('reverse case from bottom', () => {
-        expect(move(5, 4, 0)).toEqual([4, 0, 1, 2, 3])
-        expect(move(5, 4, 1)).toEqual([0, 4, 1, 2, 3])
-        expect(move(5, 4, 2)).toEqual([0, 1, 4, 2, 3])
-        expect(move(5, 4, 3)).toEqual([0, 1, 2, 4, 3])
-        expect(move(5, 4, 4)).toEqual([0, 1, 2, 3, 4])
+    t.test('center case', st => {
+        st.equal(clamp(4, 3, 5), 4)
+
+        st.end()
     })
 
-    test('reverse case from no bottom', () => {
-        expect(move(5, 3, 0)).toEqual([3, 0, 1, 2, 4])
-        expect(move(5, 3, 1)).toEqual([0, 3, 1, 2, 4])
-        expect(move(5, 3, 2)).toEqual([0, 1, 3, 2, 4])
-        expect(move(5, 3, 3)).toEqual([0, 1, 2, 3, 4])
+    t.test('right edge case', st => {
+        st.equal(clamp(5, 3, 5), 5)
+
+        st.end()
+    })
+
+    t.test('right out case', st => {
+        st.equal(clamp(7, 3, 5), 5)
+
+        st.end()
+    })
+})
+
+test('move', t => {
+    t.test('normal case from top', st => {
+        st.deepEqual(move(5, 0, 0), [0, 1, 2, 3, 4])
+        st.deepEqual(move(5, 0, 1), [1, 0, 2, 3, 4])
+        st.deepEqual(move(5, 0, 2), [1, 2, 0, 3, 4])
+        st.deepEqual(move(5, 0, 3), [1, 2, 3, 0, 4])
+        st.deepEqual(move(5, 0, 4), [1, 2, 3, 4, 0])
+
+        st.end()
+    })
+
+    t.test('normal case from no top', st => {
+        st.deepEqual(move(5, 1, 1), [0, 1, 2, 3, 4])
+        st.deepEqual(move(5, 1, 2), [0, 2, 1, 3, 4])
+        st.deepEqual(move(5, 1, 3), [0, 2, 3, 1, 4])
+        st.deepEqual(move(5, 1, 4), [0, 2, 3, 4, 1])
+
+        st.end()
+    })
+
+    t.test('reverse case from bottom', st => {
+        st.deepEqual(move(5, 4, 0), [4, 0, 1, 2, 3])
+        st.deepEqual(move(5, 4, 1), [0, 4, 1, 2, 3])
+        st.deepEqual(move(5, 4, 2), [0, 1, 4, 2, 3])
+        st.deepEqual(move(5, 4, 3), [0, 1, 2, 4, 3])
+        st.deepEqual(move(5, 4, 4), [0, 1, 2, 3, 4])
+
+        st.end()
+    })
+
+    t.test('reverse case from no bottom', st => {
+        st.deepEqual(move(5, 3, 0), [3, 0, 1, 2, 4])
+        st.deepEqual(move(5, 3, 1), [0, 3, 1, 2, 4])
+        st.deepEqual(move(5, 3, 2), [0, 1, 3, 2, 4])
+        st.deepEqual(move(5, 3, 3), [0, 1, 2, 3, 4])
+
+        st.end()
     })
 })
