@@ -43,7 +43,7 @@ const Index: NextComponentType = () => {
                 }
             })
         } else {
-            order.current = move(order.current.length, apparentStart, apparentGoal).map(
+            order.current = move(apparentStart, apparentGoal, order.current.length).map(
                 sortDestination => order.current[sortDestination],
             )
 
