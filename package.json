@@ -14,7 +14,7 @@
         "export": "next export",
         "lintAll": "eslint . --fix --ext .js,.ts,.tsx",
         "fmt": "prettier --loglevel warn --write \"**/*.{js,ts,tsx,md,json,css}\"",
-        "type-check": "tsc -w -noEmit",
+        "type-check": "tsc -w",
         "test": "ava"
     },
     "keywords": [],
