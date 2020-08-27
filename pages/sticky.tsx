@@ -1,5 +1,5 @@
 import React from 'react'
-import { NextComponentType } from 'next'
+import { NextPage } from 'next'
 
 import styled from 'styled-components'
 
@@ -9,7 +9,7 @@ import { useDrag } from 'react-use-gesture'
 const size = 100
 const [min, max] = [0, size * 2]
 
-const Sticky: NextComponentType = () => {
+const Sticky: NextPage = () => {
     const [isTop, setIsTop] = React.useState(true)
     const clamped = isTop ? min : max
     const base = { y: clamped }

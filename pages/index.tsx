@@ -1,5 +1,5 @@
 import React from 'react'
-import { NextComponentType } from 'next'
+import { NextPage } from 'next'
 
 import styled from 'styled-components'
 
@@ -12,7 +12,7 @@ const data = ['red', 'blue', 'green', 'purple', 'yellow']
 const height = 100
 const between = 10
 
-const Index: NextComponentType = () => {
+const Index: NextPage = () => {
     const { order, springs, setSprings, ...utils } = useOrder(data.length)
 
     const bind = useDrag(({ args: [rawStart], movement: [, my], down }) => {
