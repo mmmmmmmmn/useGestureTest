@@ -57,6 +57,7 @@ module.exports = {
                         },
                     },
                 ],
+                eqeqeq: 2,
             },
         },
     ],
