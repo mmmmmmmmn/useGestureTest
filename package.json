@@ -12,8 +12,8 @@
         "build": "next build",
         "start": "next start",
         "export": "next export",
-        "lintAll": "eslint . --fix --ext .js,.ts,.tsx",
-        "fmt": "prettier --loglevel warn --write \"**/*.{js,ts,tsx,md,json,css}\"",
+        "format": "prettier --write .",
+        "lint": "eslint --fix .",
         "type-check": "tsc -w",
         "test": "ava"
     },
