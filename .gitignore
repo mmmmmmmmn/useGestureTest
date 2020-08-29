@@ -1,7 +1,8 @@
 node_modules
 .next
-out
 .env
+out
 dist
+
 package-lock.json
 .now
