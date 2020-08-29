@@ -12,8 +12,8 @@
         "build": "next build",
         "start": "next start",
         "export": "next export",
-        "format": "prettier --write .",
-        "lint": "eslint --fix .",
+        "format": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,tsx,md,json,css}\"",
+        "lint": "eslint --fix --ignore-path .gitignore .",
         "type-check": "tsc -w",
         "test": "ava"
     },
