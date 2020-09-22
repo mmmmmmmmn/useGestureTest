@@ -52,7 +52,7 @@ module.exports = {
                             requireLast: false,
                         },
                         singleline: {
-                            delimiter: 'comma',
+                            delimiter: 'semi',
                             requireLast: false,
                         },
                     },
