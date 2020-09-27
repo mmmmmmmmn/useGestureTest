@@ -14,7 +14,7 @@
         "export": "next export",
         "format": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,tsx,md,json,css}\"",
         "lint": "eslint --fix \"**/*.{js,ts,tsx}\"",
-        "type-check": "tsc -w",
+        "typeCheck": "tsc -w",
         "test": "ava"
     },
     "keywords": [],
