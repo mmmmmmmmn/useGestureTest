@@ -58,6 +58,7 @@ module.exports = {
                     },
                 ],
                 eqeqeq: 2,
+                'react-hooks/rules-of-hooks': 2,
             },
         },
     ],

@@ -13,7 +13,7 @@
         "start": "next start",
         "export": "next export",
         "format": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,tsx,md,json,css}\"",
-        "lint": "eslint --fix --ignore-path .gitignore .",
+        "lint": "eslint --fix \"**/*.{js,ts,tsx}\"",
         "type-check": "tsc -w",
         "test": "ava"
     },
@@ -41,7 +41,7 @@
         "eslint-config-prettier": "6.7.0",
         "eslint-plugin-prettier": "3.1.2",
         "eslint-plugin-react": "7.17.0",
-        "eslint-plugin-react-hooks": "2.3.0",
+        "eslint-plugin-react-hooks": "^2.3.0",
         "husky": "3.1.0",
         "lint-staged": "9.5.0",
         "prettier": "1.19.1",
